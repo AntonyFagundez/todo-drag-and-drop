@@ -33,6 +33,7 @@ export default function reducer(state, action) {
 
     case ADD_TO_LIST: {
       const { list, element } = action.payload;
+
       const newList = [...state[list]];
 
       newList.push({ ...element, id: index });

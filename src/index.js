@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "./index.css";
 import App from "./App";
 import DataProvider from "./context/DataProvider";
+import "./utils/console-message"; //IFFE
 
 ReactDOM.render(
   <DataProvider>
