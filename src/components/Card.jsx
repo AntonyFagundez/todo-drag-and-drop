@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Stack, Heading, Text } from "@chakra-ui/layout";
 import { CloseButton } from "@chakra-ui/close-button";
+
 const Card = ({ title, description }) => {
   return (
     <Box borderRadius="lg" borderWidth="2px" boxShadow="md" height="auto" mt="2" width="full">

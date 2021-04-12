@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Heading, Stack } from "@chakra-ui/layout";
 import { IconButton } from "@chakra-ui/button";
+import { MdAdd } from "react-icons/md";
 
 import Card from "./Card";
 
@@ -12,7 +13,13 @@ const CardContainer = ({ category }) => {
         <Heading as="h2" fontWeight="bold" m="2" textAlign="center" textShadow="inner">
           {category}
         </Heading>
-        <IconButton aria-label="add-button" bg="white" boxShadow="md" width="0.5" />
+        <IconButton
+          aria-label="add-button"
+          bg="white"
+          boxShadow="md"
+          icon={<MdAdd />}
+          width="0.5"
+        />
       </Stack>
       {[
         { id: 0, title: "task", description: "this is a task" },
