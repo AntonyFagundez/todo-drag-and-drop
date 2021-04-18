@@ -80,7 +80,10 @@ const Card = ({ title, description, id, droppableId }) => {
             minHeight={6}
             minWidth="full"
             mt="-1"
+            role="button"
+            style={{ touchAction: "none" }}
             textAlign="center"
+            touch-action="none"
           />
         </Stack>
         <Stack direction="row" spacing="auto">
