@@ -21,7 +21,7 @@ const SET_SELECTED_ID = "SET_SELECTED_ID";
  * @property {Array<Task>} data - List of tasks
  * @property {?string} selectedId - List of tasks
  */
-export const initialState = {
+export const initialState = JSON.parse(localStorage.getItem("state")) || {
   data: [
     {
       id: uuidV1(),

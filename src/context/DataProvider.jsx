@@ -9,6 +9,10 @@ const DataProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const disclosure = useDisclosure();
 
+  React.useEffect(() => {
+    localStorage.setItem("state", JSON.stringify(state));
+  }, [state]);
+
   return (
     <DataContext.Provider value={{ state, dispatch, ...disclosure }}>
       {children}

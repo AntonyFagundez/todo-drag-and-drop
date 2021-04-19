@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Heading, Stack } from "@chakra-ui/layout";
 import { useDroppable } from "@dnd-kit/core";
+import { useMediaQuery } from "@chakra-ui/media-query";
 
 import styleDefault from "../styles/styles";
 import { useData } from "../context/DataProvider";
@@ -17,6 +18,7 @@ const CardContainer = ({ head, droppableId }) => {
   });
 
   const { bgColor } = styleDefault[droppableId.toLowerCase()];
+  const [hasMinWidth] = useMediaQuery("(min-width: 539px)");
 
   return (
     <Box
@@ -34,10 +36,11 @@ const CardContainer = ({ head, droppableId }) => {
         <Stack direction="row" spacing="auto">
           <Heading
             isTruncated
-            as="h2"
+            as={"h4"}
             color={isOver ? "white" : bgColor}
             fontWeight="bold"
             m="2"
+            size={hasMinWidth ? "xl" : "lg"}
             textAlign="center"
             textShadow="inner"
           >

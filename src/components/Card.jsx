@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Stack, Heading, Text } from "@chakra-ui/layout";
-import { CloseButton } from "@chakra-ui/close-button";
 import { IconButton } from "@chakra-ui/button";
-import { MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit, MdSettings } from "react-icons/md";
 import { FaGripVertical } from "react-icons/fa";
 import { useDraggable } from "@dnd-kit/core";
 import { useToast } from "@chakra-ui/toast";
 import { useMediaQuery } from "@chakra-ui/media-query";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 
 import { useData } from "../context/DataProvider";
 import { removeTask, setSelectedTask } from "../context/reducer";
@@ -61,30 +61,58 @@ const Card = ({ title, description, id }) => {
         borderRadius="lg"
         borderWidth="2px"
         boxShadow="md"
-        height="auto"
+        height="150px"
+        minHeight="150px"
         mt="2"
         style={style}
         width="full"
       >
-        <Stack direction="row">
-          <Stack direction="column" spacing="auto">
-            <Heading as="h5" isTruncated={!hasMinWidth} m="2" mb="0" size="md">
+        <Stack direction="row" height="100%" pr="1" spacing="none">
+          <Stack direction="column" overflowY="auto" width={hasMinWidth ? "90%" : "80%"}>
+            <Heading
+              as="h5"
+              isTruncated={!hasMinWidth}
+              m="2"
+              mb="0"
+              size={hasMinWidth ? "md" : "sm"}
+            >
               {title}
             </Heading>
-            <Text m="5" mt="3" noOfLines={3} userSelect="none">
+
+            <Text m="5" ml="6" noOfLines={3} pl="2" size="sm" userSelect="none">
               {description}
             </Text>
           </Stack>
-          <Stack direction="column">
-            <CloseButton size="sm" onClick={handleOpen} />
+          <Stack
+            align="center"
+            direction="column"
+            pb="2"
+            spacing="auto"
+            width={hasMinWidth ? "10%" : "20%"}
+          >
             <IconButton
               {...listeners}
               {...attributes}
+              _active={{
+                backgroundColor: "white",
+              }}
+              _focus={{
+                backgroundColor: "white",
+              }}
+              _hover={{
+                backgroundColor: "white",
+              }}
+              _selected={{
+                backgroundColor: "white",
+              }}
               bg="white"
+              color="blackAlpha.700"
               cursor="grab"
-              icon={<FaGripVertical width={100} />}
-              maxWidth="2"
-              minHeight={6}
+              fontSize="smaller"
+              fontWeight="thin"
+              icon={<FaGripVertical fontSize="smaller" fontWeight="thin" />}
+              maxWidth="5"
+              minWidth="5"
               role="button"
               size="sm"
               style={{ touchAction: "none" }}
@@ -92,7 +120,26 @@ const Card = ({ title, description, id }) => {
               touch-action="none"
               width="2"
             />
-            <IconButton bg="white" icon={<MdEdit />} size="sm" onClick={handleEdit} />
+            <Menu>
+              <MenuButton
+                aria-label="Options"
+                as={IconButton}
+                color="blackAlpha.700"
+                icon={<MdSettings />}
+                maxHeight="6"
+                maxWidth="5"
+                minWidth="5"
+                variant="outline"
+              />
+              <MenuList>
+                <MenuItem icon={<MdEdit />} onClick={handleEdit}>
+                  Edit Task
+                </MenuItem>
+                <MenuItem icon={<MdDelete />} onClick={handleOpen}>
+                  Delete Task
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Stack>
         </Stack>
       </Box>
