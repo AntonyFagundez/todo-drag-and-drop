@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Box, Stack, Heading, Text } from "@chakra-ui/layout";
 import { CloseButton } from "@chakra-ui/close-button";
 import { IconButton } from "@chakra-ui/button";
-import { MdDragHandle, MdEdit } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import { FaGripVertical } from "react-icons/fa";
 import { useDraggable } from "@dnd-kit/core";
 import { useToast } from "@chakra-ui/toast";
