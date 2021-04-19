@@ -1,53 +1,94 @@
+import { v1 as uuidV1 } from "uuid";
 //Me base en el orden de ducks
 //(Un archivo con las constantes, el reducer y los creadores de acción)
-const REMOVE_FROM_LIST = "REMOVE_FROM_LIST";
-const ADD_TO_LIST = "ADD_TO_LIST";
-const SET_FROM = "SET_FROM";
+const REMOVE_TASK = "REMOVE_TASK";
+const ADD_TASK = "ADD_TASK";
+const EDIT_TASK = "EDIT_TASK";
+const SET_SELECTED_ID = "SET_SELECTED_ID";
 
-let index = 2;
+/**
+ * @typedef Task
+ * @type {object}
+ * @property {string} id - Unique id,
+ * @property {string} title - Title of task
+ * @property {string} description - Description
+ * @property {"TODO"|"DOING"|"DONE"} status - status
+ *
+ */
 
+/**
+ * @typedef State
+ * @property {Array<Task>} data - List of tasks
+ * @property {?string} selectedId - List of tasks
+ */
 export const initialState = {
-  todo: [
+  data: [
     {
-      id: 1, //debo inicializarlo en cero, la API al parecer no funciona bien con un ID en cero,
-      //podría deberse a alguna validación interna
+      id: uuidV1(),
       title: "Tarea Ejemplo",
       description: "Esto es una tarea de ejemplo",
+      status: "TODO",
     },
   ],
-  doing: [],
-  done: [],
-  from: null,
+  selectedId: null,
 };
 
+/**
+ * @type {Task}
+ */
+export const initialTask = {
+  id: "",
+  title: "",
+  description: "",
+  status: "TODO",
+};
+
+/**
+ * @typedef Action
+ * @property {string} type
+ * @property {string|Task} payload
+ */
+
+/**
+ * @param {State} state
+ * @param {Action} action
+ */
 export default function reducer(state, action) {
   switch (action.type) {
-    case REMOVE_FROM_LIST: {
-      const { list, elementId } = action.payload;
-
+    case REMOVE_TASK: {
       return {
         ...state,
-        [list]: state[list].filter((x) => x.id !== elementId),
+        data: state.data.filter((x) => x.id !== action.payload),
       };
     }
 
-    case ADD_TO_LIST: {
-      const { list, element } = action.payload;
-
-      const newList = [...state[list]];
-
-      newList.push({ ...element, id: index });
-      index++; //index 'autoincremental'
+    case ADD_TASK: {
+      let element = { ...action.payload, id: uuidV1() };
 
       return {
         ...state,
-        [list]: newList,
+        data: [...state.data, element],
       };
     }
-    case SET_FROM: {
+    case EDIT_TASK: {
       return {
         ...state,
-        from: action.payload,
+        data: state.data.map((task) => {
+          let newTask = task;
+
+          if (task.id === action.payload.id) {
+            newTask = action.payload;
+          }
+
+          return newTask;
+        }),
+      };
+    }
+
+    case SET_SELECTED_ID: {
+      return {
+        ...state,
+        selectedId: action.payload,
       };
     }
     default:
@@ -55,29 +96,50 @@ export default function reducer(state, action) {
   }
 }
 
-export const removeFromList = (list, elementId) => {
+/**
+ * @param {string} elementId
+ *
+ * @returns {Action}
+ */
+export const removeTask = (elementId) => {
   return {
-    type: REMOVE_FROM_LIST,
-    payload: {
-      list,
-      elementId,
-    },
+    type: REMOVE_TASK,
+    payload: elementId,
   };
 };
 
-export const addToList = (list, element) => {
+/**
+ * @param {Task} task
+ *
+ * @returns {Action}
+ */
+export const addTask = (task) => {
   return {
-    type: ADD_TO_LIST,
-    payload: {
-      list,
-      element,
-    },
+    type: ADD_TASK,
+    payload: task,
   };
 };
 
-export const setFrom = (name) => {
+/**
+ * @param {Task} task
+ *
+ * @returns {Action}
+ */
+export const editTask = (task) => {
   return {
-    type: SET_FROM,
-    payload: name,
+    type: EDIT_TASK,
+    payload: task,
+  };
+};
+
+/**
+ * @param {?string} id
+ *
+ * @returns {Action}
+ */
+export const setSelectedTask = (id) => {
+  return {
+    type: SET_SELECTED_ID,
+    payload: id,
   };
 };

@@ -5,28 +5,27 @@ import React from "react";
 import { MdAdd } from "react-icons/md";
 
 import CardContainer from "./components/CardContainer";
+import TodoForm from "./components/TodoForm";
 import { useData } from "./context/DataProvider";
-import { addToList, removeFromList } from "./context/reducer";
-import { getStateName } from "./utils/utils";
+import { editTask } from "./context/reducer";
 
 function App() {
-  const { state, dispatch } = useData();
-  const { todo, doing, done, from } = state;
+  const { state, dispatch, onOpen } = useData();
+  const { data } = state;
 
   const handleDragEnd = (ev) => {
     const {
-      over: { id: overId },
+      over: { id: newStatus },
       active: { id: elementId },
     } = ev;
+    const element = data.find((x) => x.id === elementId);
 
-    const element = state[from].find((x) => x.id === elementId);
-
-    dispatch(removeFromList(from, elementId));
-    dispatch(addToList(getStateName(overId), element));
+    dispatch(editTask({ ...element, status: newStatus }));
   };
 
   return (
     <>
+      <TodoForm />
       <DndContext onDragEnd={handleDragEnd}>
         <Stack direction="row" width="100%">
           <SimpleGrid
@@ -37,22 +36,16 @@ function App() {
             width="100%"
           >
             <Box height="100vh" p="2">
-              <CardContainer data={todo} droppableId="todo" head="TO DO" />
+              <CardContainer droppableId="TODO" head="TO DO" />
             </Box>
             <Box height="100vh" p="2">
-              <CardContainer data={doing} droppableId="doing" head="DOING" />
+              <CardContainer droppableId="DOING" head="DOING" />
             </Box>
             <Box height="100vh" p="2">
-              <CardContainer data={done} droppableId="done" head="DONE" />
+              <CardContainer droppableId="DONE" head="DONE" />
             </Box>
           </SimpleGrid>
-          <Stack
-            height="100%"
-            pointerEvents="none"
-            position="fixed"
-            // style={{ touchAction: "none", pointerEvents: "none" }}
-            width="100%"
-          >
+          <Stack height="100%" pointerEvents="none" position="fixed" width="100%">
             <IconButton
               _focusWithin={{
                 backgroundColor: "teal.600",
@@ -77,9 +70,9 @@ function App() {
               marginRight="6"
               marginTop="auto"
               pointerEvents="all"
-              // data-list={droppableId}
               size="lg"
               width="1"
+              onClick={onOpen}
             />
           </Stack>
         </Stack>

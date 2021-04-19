@@ -1,34 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Heading, Stack } from "@chakra-ui/layout";
-import { IconButton } from "@chakra-ui/button";
-import { MdAdd } from "react-icons/md";
 import { useDroppable } from "@dnd-kit/core";
-import { PopoverTrigger } from "@chakra-ui/popover";
 
 import styleDefault from "../styles/styles";
+import { useData } from "../context/DataProvider";
 
 import Card from "./Card";
-import PopoverHOC from "./PopoverHOC";
 
-const CardContainer = ({ head, data, droppableId }) => {
+const CardContainer = ({ head, droppableId }) => {
+  const {
+    state: { data },
+  } = useData();
   const { setNodeRef, isOver } = useDroppable({
     id: droppableId,
   });
 
-  const { bgColor } = styleDefault[droppableId];
+  const { bgColor } = styleDefault[droppableId.toLowerCase()];
 
   return (
-    <PopoverHOC listName={droppableId}>
-      <Box
-        ref={setNodeRef}
-        bg={isOver ? bgColor : "white"}
-        borderRadius="xl"
-        borderWidth="2px"
-        height="container.sm"
-        p="2"
-        shadow="md"
-      >
+    <Box
+      ref={setNodeRef}
+      bg={isOver ? bgColor : "white"}
+      borderRadius="xl"
+      borderWidth="2px"
+      height="fit-content"
+      maxWidth="100%"
+      p="3"
+      pb={data.length > 0 ? "6" : "16"}
+      shadow="md"
+    >
+      <Stack direction="column">
         <Stack direction="row" spacing="auto">
           <Heading
             isTruncated
@@ -41,28 +43,19 @@ const CardContainer = ({ head, data, droppableId }) => {
           >
             {head}
           </Heading>
-          <PopoverTrigger>
-            <IconButton
-              aria-label="add-button"
-              bg="white"
-              boxShadow="md"
-              data-list={droppableId}
-              icon={<MdAdd />}
-              width="0.5"
-            />
-          </PopoverTrigger>
         </Stack>
-        {data.map((item, i) => (
-          <Card key={i} droppableId={droppableId} {...item} />
-        ))}
-      </Box>
-    </PopoverHOC>
+        {data
+          .filter((x) => x.status === droppableId)
+          .map((item, i) => (
+            <Card key={i} droppableId={droppableId} {...item} />
+          ))}
+      </Stack>
+    </Box>
   );
 };
 
 CardContainer.propTypes = {
   head: PropTypes.string.isRequired,
-  data: PropTypes.array.isRequired,
   droppableId: PropTypes.string.isRequired,
 };
 
